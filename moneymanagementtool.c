@@ -143,11 +143,11 @@ void ptgcheck(char name[][100], int total2, int n, int total, int paid[])
         {
             paid[i] = 0;
             printf("%s's percentage share is %d \n", name[i], paid[i]);
-            printf("%s's \% share amount is %d\n", name[i], (paid[i] * total2) / 100);
+            printf("%s's %% share amount is %d\n", name[i], (paid[i] * total2) / 100);
         }
         paid[n - 1] = total - sum;
         printf("%s's percentage share is %d\n", name[n - 1], paid[n - 1]);
-        printf("%s's \% share amount is %d\n", name[n - 1], (paid[n - 1] * total2) / 100);
+        printf("%s's %% share amount is %d\n", name[n - 1], (paid[n - 1] * total2) / 100);
     }
 }
 
