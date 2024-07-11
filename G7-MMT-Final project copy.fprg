@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="2.11">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="meena"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2022-02-03 12:10:17 AM"/>
+        <attribute name="created" value="bWVlbmE7QkFZTUFYOzIwMjItMDItMDI7MDc6MzQ6NTcgUE07MjI0OA=="/>
+        <attribute name="edited" value="bWVlbmE7QkFZTUFYOzIwMjItMDItMDI7MTE6NDA6MDggUE07MjttZWVuYTtCQVlNQVg7MjAyMi0wMS0xNzswNDoxODo0MCBQTTtQcm9qZWN0aW1wbGVtZW50YXRpb24xLmZwcmc7NzQ3MA=="/>
+        <attribute name="edited" value="bWVlbmE7QkFZTUFYOzIwMjItMDItMDM7MTI6MTA6MTcgQU07MTU7MjM4MQ=="/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="n, total, i, flag, ch, avg, t1, t2, k, m" type="Integer" array="False" size=""/>
+            <declare name="x, y, pos, neg, percent, mainch" type="Integer" array="False" size=""/>
+            <do expression="n&lt;1">
+                <output expression="&quot;Enter the no. of members: &quot;" newline="True"/>
+                <input variable="n"/>
+            </do>
+            <declare name="event" type="String" array="False" size=""/>
+            <declare name="name" type="String" array="True" size="n"/>
+            <declare name="paid, avgdiff, indpos, indneg" type="Integer" array="True" size="n"/>
+            <for variable="i" start="0" end="n-1" direction="inc" step="1">
+                <output expression="&quot;Enter the name of the member &quot;&amp;i+1&amp;&quot; :&quot;" newline="True"/>
+                <input variable="name[i]"/>
+            </for>
+            <assign variable="flag" expression="1"/>
+            <while expression="flag==1">
+                <output expression="&quot;Enter the name of the occasion: &quot;" newline="True"/>
+                <input variable="event"/>
+                <output expression="&quot;Enter the total amount: &quot;" newline="True"/>
+                <input variable="total"/>
+                <do expression="mainch!=1 &amp;&amp; mainch!=2">
+                    <output expression="&quot;Enter 1 for calculating the expenditure before paying the bill.&#13;&#10;Enter 2 to split the bill among members after paying.&quot;" newline="True"/>
+                    <input variable="mainch"/>
+                </do>
+                <if expression="mainch==1">
+                    <then>
+                        <call expression="billcalc(name,total,n)"/>
+                    </then>
+                    <else>
+                        <declare name="tempsum" type="Integer" array="False" size=""/>
+                        <assign variable="tempsum" expression="0"/>
+                        <for variable="i" start="0" end="n-1" direction="inc" step="1">
+                            <do expression="paid[i]&gt;total">
+                                <output expression="&quot;How much did &quot;&amp;name[i]&amp;&quot; pay?&quot;" newline="True"/>
+                                <input variable="paid[i]"/>
+                            </do>
+                            <assign variable="tempsum" expression="tempsum+paid[i]"/>
+                            <while expression="tempsum&gt;total">
+                                <output expression="&quot;How much did &quot;&amp;name[i]&amp;&quot; pay?&quot;" newline="True"/>
+                                <input variable="paid[i]"/>
+                            </while>
+                        </for>
+                        <do expression="ch!=1 &amp;&amp; ch!=2">
+                            <output expression="&quot; How do you want to split the bill?&#13;&#10;Enter:&#13;&#10;1 to split equally&#13;&#10;2 to split by percentage&quot;" newline="True"/>
+                            <input variable="ch"/>
+                        </do>
+                        <if expression="ch==1">
+                            <then>
+                                <assign variable="t1" expression="0"/>
+                                <assign variable="t2" expression="0"/>
+                                <assign variable="avg" expression="total/n"/>
+                                <output expression="&quot;Average contribution amount for each person &quot;&amp;avg&amp;&quot;.&quot;" newline="True"/>
+                                <for variable="k" start="0" end="n-1" direction="inc" step="1">
+                                    <assign variable="avgdiff[k]" expression="paid[k]-avg"/>
+                                    <if expression="avgdiff[k]&lt;0">
+                                        <then>
+                                            <assign variable="indneg[t1]" expression="k"/>
+                                            <assign variable="t1" expression="t1+1"/>
+                                        </then>
+                                        <else>
+                                            <if expression="avgdiff[k]&gt;0">
+                                                <then>
+                                                    <assign variable="indpos[t2]" expression="k"/>
+                                                    <assign variable="t2" expression="t2+1"/>
+                                                </then>
+                                                <else/>
+                                            </if>
+                                        </else>
+                                    </if>
+                                </for>
+                                <call expression="split(t1,t2,indneg,indpos,avgdiff,name,event)"/>
+                            </then>
+                            <else>
+                                <if expression="ch==2">
+                                    <then>
+                                        <assign variable="t1" expression="0"/>
+                                        <assign variable="t2" expression="0"/>
+                                        <for variable="k" start="0" end="n-1" direction="inc" step="1">
+                                            <output expression="&quot;Enter the percentage share of &quot;&amp;name[k]&amp;&quot;: &quot;" newline="True"/>
+                                            <input variable="percent"/>
+                                            <assign variable="avgdiff[k]" expression="paid[k]-((total*percent)/100)"/>
+                                            <if expression="avgdiff[k]&lt;0">
+                                                <then>
+                                                    <assign variable="indneg[t1]" expression="k"/>
+                                                    <assign variable="t1" expression="t1+1"/>
+                                                </then>
+                                                <else>
+                                                    <if expression="avgdiff[k]&gt;0">
+                                                        <then>
+                                                            <assign variable="indpos[t2]" expression="k"/>
+                                                            <assign variable="t2" expression="t2+1"/>
+                                                        </then>
+                                                        <else/>
+                                                    </if>
+                                                </else>
+                                            </if>
+                                        </for>
+                                        <call expression="split(t1,t2,indneg,indpos,avgdiff,name,event)"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </else>
+                        </if>
+                    </else>
+                </if>
+                <output expression="&quot;Do you want to continue for another event?&#13;&#10;Enter 1 for YES&#13;&#10;Enter 0 for NO&quot;" newline="True"/>
+                <input variable="flag"/>
+            </while>
+            <output expression="&quot;THANKYOU&quot;" newline="True"/>
+        </body>
+    </function>
+    <function name="billcalc" type="None" variable="">
+        <parameters>
+            <parameter name="Groupname" type="String" array="True"/>
+            <parameter name="total" type="Integer" array="False"/>
+            <parameter name="n" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="option, i, ptg" type="Integer" array="False" size=""/>
+            <do expression="option!=1 &amp;&amp; option!=2 &amp;&amp; option!=3">
+                <output expression="&quot;Please enter your choice&quot;" newline="True"/>
+                <output expression="&quot;Enter 1 for equally splitting&quot;" newline="True"/>
+                <output expression="&quot;2 for unequal splitting&quot;" newline="True"/>
+                <output expression="&quot;3 for percentage share&quot;" newline="True"/>
+                <input variable="option"/>
+            </do>
+            <if expression="option==1">
+                <then>
+                    <declare name="avg" type="Integer" array="False" size=""/>
+                    <output expression="&quot;You have chosen to split equally&quot;" newline="True"/>
+                    <assign variable="avg" expression="total/n"/>
+                    <output expression="&quot;Each person owes &quot;&amp;avg&amp;&quot; amount &quot;" newline="True"/>
+                </then>
+                <else>
+                    <if expression="option==2">
+                        <then>
+                            <declare name="unqamt" type="Integer" array="True" size="n"/>
+                            <for variable="i" start="0" end="n-1" direction="inc" step="1">
+                                <output expression="&quot;Please enter amount for &quot;&amp;Groupname[i]" newline="True"/>
+                                <input variable="unqamt[i]"/>
+                            </for>
+                            <for variable="i" start="0" end="n-1" direction="inc" step="1">
+                                <output expression="Groupname[i]&amp;&quot; owes &quot;&amp;unqamt[i]&amp;&quot; , &quot;" newline="False"/>
+                            </for>
+                        </then>
+                        <else>
+                            <declare name="ptgamt" type="Integer" array="True" size="n"/>
+                            <for variable="i" start="0" end="n-1" direction="inc" step="1">
+                                <output expression="&quot;Pls enter Percentage for &quot;&amp;Groupname[i]" newline="True"/>
+                                <input variable="ptgamt[i]"/>
+                                <assign variable="ptg" expression="(ptgamt[i]/100)*total"/>
+                                <output expression="Groupname[i]&amp;&quot; owes &quot;&amp;ptg&amp;&quot; according to percentage share&quot;" newline="True"/>
+                            </for>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="split" type="None" variable="">
+        <parameters>
+            <parameter name="t1" type="Integer" array="False"/>
+            <parameter name="t2" type="Integer" array="False"/>
+            <parameter name="indneg" type="Integer" array="True"/>
+            <parameter name="indpos" type="Integer" array="True"/>
+            <parameter name="avgdiff" type="Integer" array="True"/>
+            <parameter name="name" type="String" array="True"/>
+            <parameter name="event" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="pos, neg, x, y, k, m" type="Integer" array="False" size=""/>
+            <output expression="&quot;Expenditure details for &quot;&amp;event" newline="True"/>
+            <for variable="k" start="0" end="t1-1" direction="inc" step="1">
+                <assign variable="x" expression="indneg[k]"/>
+                <for variable="m" start="0" end="t2-1" direction="inc" step="1">
+                    <assign variable="neg" expression="avgdiff[x]"/>
+                    <assign variable="y" expression="indpos[m]"/>
+                    <assign variable="pos" expression="avgdiff[y]"/>
+                    <if expression="Abs(neg)&gt;pos">
+                        <then>
+                            <output expression="name[x]&amp;&quot; should give Rs.&quot;&amp;pos&amp;&quot; to &quot;&amp;name[y]&amp;&quot;.&quot;" newline="True"/>
+                            <assign variable="avgdiff[x]" expression="avgdiff[x]+pos"/>
+                            <assign variable="avgdiff[y]" expression="0"/>
+                        </then>
+                        <else>
+                            <output expression="name[x]&amp;&quot; should give Rs.&quot;&amp;Abs(neg)&amp;&quot; to &quot;&amp;name[y]&amp;&quot;.&quot;" newline="True"/>
+                            <assign variable="avgdiff[x]" expression="0"/>
+                            <assign variable="avgdiff[y]" expression="avgdiff[y]+neg"/>
+                        </else>
+                    </if>
+                </for>
+            </for>
+        </body>
+    </function>
+</flowgorithm>
